@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { BodyText } from '../../../components/ui/BodyText';
+import { BodyText } from './BodyText';
 
 export const PanelStoryHeader = styled.div`
   display: grid;
   gap: 0.45rem;
-  max-width: 30rem;
+  max-width: 34rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     gap: 0.35rem;
@@ -34,11 +34,15 @@ export const PanelStoryScroll = styled.div`
   gap: 0.85rem;
   overflow: auto;
   padding-right: 0.15rem;
-  max-width: 32rem;
+  max-width: 34rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     max-height: 30vh;
     max-width: none;
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    max-height: 24vh;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {

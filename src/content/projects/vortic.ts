@@ -13,7 +13,7 @@ export const vorticProject: ProjectContent = {
     kind: 'image',
     src: '/media/vortic/logoVortic.png',
     alt: 'Identidade visual do projeto Vortic',
-    aspectRatio: '1587 / 2245'
+    aspectRatio: '879 / 771'
   },
   sections: [
     {

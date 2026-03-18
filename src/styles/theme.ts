@@ -18,6 +18,7 @@ export const createTheme = (themeKey: ThemeKey) => {
     radius: tokens.radius,
     spacing: tokens.spacing,
     typography: tokens.typography,
+    viewport: tokens.viewport,
     width: tokens.width,
     project: {
       key: themeKey,

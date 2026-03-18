@@ -9,6 +9,10 @@ const List = styled.ul`
   flex-wrap: wrap;
   gap: 0.45rem;
 
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    gap: 0.34rem;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     gap: 0.35rem;
   }
@@ -22,6 +26,11 @@ const Item = styled.li`
   color: ${({ theme }) => theme.colors.textMuted};
   font-size: 0.75rem;
   letter-spacing: -0.01em;
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    padding: 0.3rem 0.56rem;
+    font-size: 0.68rem;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     padding: 0.34rem 0.6rem;

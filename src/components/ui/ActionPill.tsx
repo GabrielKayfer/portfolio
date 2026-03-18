@@ -44,6 +44,13 @@ const actionPillStyles = css`
     letter-spacing: 0.12em;
   }
 
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    min-height: 2rem;
+    padding: 0.38rem 0.6rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     min-height: 2rem;
     padding: 0.38rem 0.58rem;

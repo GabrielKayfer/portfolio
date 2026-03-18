@@ -1,67 +1,7 @@
-import type { ReactNode } from 'react';
-import styled, { css } from 'styled-components';
-import { Eyebrow } from '../../../components/ui/Eyebrow';
-import { Tag } from '../../../components/ui/Tag';
-import type { LinkItem, ProjectSlug } from '../../../types/content';
-import { ActionPillLink } from './ActionPill';
+import styled from 'styled-components';
+import { Tag } from '../../components/ui/Tag';
 
-interface ProjectScreenChromeProps {
-  projectSlug: ProjectSlug;
-  projectTitle: string;
-  projectTagline: string;
-  projectLinks: LinkItem[];
-  showProjectTag: boolean;
-  showTagline: boolean;
-  showSmallOrb: boolean;
-  children: ReactNode;
-}
-
-const variantStyles = {
-  amorae: css`
-    right: -2rem;
-    bottom: -2rem;
-  `,
-  vortic: css`
-    right: 8%;
-    bottom: -3.2rem;
-  `,
-  seedbank: css`
-    right: -1rem;
-    bottom: -4rem;
-  `
-} as const;
-
-const ringStyles = {
-  amorae: css`
-    right: 5%;
-    top: 14%;
-  `,
-  vortic: css`
-    right: 12%;
-    top: 10%;
-  `,
-  seedbank: css`
-    right: 10%;
-    top: 18%;
-  `
-} as const;
-
-const smallOrbStyles = {
-  amorae: css`
-    top: 2.4rem;
-    right: 4.6rem;
-  `,
-  vortic: css`
-    bottom: 26%;
-    right: 10%;
-  `,
-  seedbank: css`
-    top: 2rem;
-    right: 6.6rem;
-  `
-} as const;
-
-const Root = styled.section`
+export const SeedbankPageRoot = styled.section`
   height: 100%;
   display: grid;
   place-items: center;
@@ -71,23 +11,31 @@ const Root = styled.section`
   }
 `;
 
-const Page = styled.article`
+export const SeedbankPageFrame = styled.article`
   position: relative;
   box-sizing: border-box;
-  width: min(100%, 96rem);
+  width: ${({ theme }) => theme.width.projectFrame};
   height: 100%;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr) auto;
-  gap: 1.15rem;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: clamp(0.95rem, 1.2vw, 1.15rem);
   padding:
-    clamp(1.2rem, 2.4vw, 1.85rem)
-    clamp(1.5rem, 3vw, 2.4rem)
-    clamp(2.4rem, 4.8vw, 3.6rem);
+    clamp(1.2rem, 1.8vw, 1.8rem)
+    clamp(1.5rem, 2.5vw, 2.8rem)
+    clamp(2.4rem, 4vw, 3.4rem);
   background:
     radial-gradient(circle at 76% 24%, rgba(255, 255, 255, 0.06), transparent 14%),
     radial-gradient(circle at 70% 72%, rgba(255, 255, 255, 0.04), transparent 24%),
     linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0));
   overflow: hidden;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+    width: min(100%, 94rem);
+    padding:
+      clamp(1rem, 1.5vw, 1.4rem)
+      clamp(1.15rem, 2vw, 1.9rem)
+      clamp(2rem, 3vw, 2.8rem);
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     width: 100%;
@@ -97,20 +45,28 @@ const Page = styled.article`
     overflow-x: hidden;
   }
 
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    gap: 0.8rem;
+    padding: 0.82rem 0.9rem 1.2rem;
+    overflow: hidden;
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     gap: 0.85rem;
     padding: 0.8rem 0.8rem 2rem;
   }
 `;
 
-const Orb = styled.div`
+const OrbBase = styled.div`
   position: absolute;
   z-index: 0;
   border-radius: 999px;
   pointer-events: none;
 `;
 
-const OrbLarge = styled(Orb)<{ $variant: ProjectSlug }>`
+export const SeedbankOrbLarge = styled(OrbBase)`
+  right: -1rem;
+  bottom: -4rem;
   width: clamp(12rem, 22vw, 19rem);
   height: clamp(12rem, 22vw, 19rem);
   background: radial-gradient(
@@ -120,11 +76,16 @@ const OrbLarge = styled(Orb)<{ $variant: ProjectSlug }>`
     transparent 74%
   );
   opacity: 0.5;
-  ${({ $variant }) => variantStyles[$variant]}
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     opacity: 0.34;
     transform: scale(0.82);
+    transform-origin: center;
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    opacity: 0.26;
+    transform: scale(0.7);
     transform-origin: center;
   }
 
@@ -134,7 +95,9 @@ const OrbLarge = styled(Orb)<{ $variant: ProjectSlug }>`
   }
 `;
 
-const OrbSmall = styled(Orb)<{ $variant: ProjectSlug }>`
+export const SeedbankOrbSmall = styled(OrbBase)`
+  top: 2rem;
+  right: 6.6rem;
   width: clamp(3.5rem, 5vw, 4.6rem);
   height: clamp(3.5rem, 5vw, 4.6rem);
   background: radial-gradient(
@@ -143,11 +106,15 @@ const OrbSmall = styled(Orb)<{ $variant: ProjectSlug }>`
     rgba(255, 255, 255, 0.24) 58%,
     transparent 72%
   );
-  ${({ $variant }) => smallOrbStyles[$variant]}
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     opacity: 0.7;
     transform: scale(0.84);
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    opacity: 0.56;
+    transform: scale(0.74);
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -155,19 +122,26 @@ const OrbSmall = styled(Orb)<{ $variant: ProjectSlug }>`
   }
 `;
 
-const Ring = styled.div<{ $variant: ProjectSlug }>`
+export const SeedbankRing = styled.div`
   position: absolute;
   z-index: 0;
+  right: 10%;
+  top: 18%;
   width: clamp(16rem, 28vw, 24rem);
   height: clamp(16rem, 28vw, 24rem);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 50%;
   opacity: 0.38;
-  ${({ $variant }) => ringStyles[$variant]}
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     opacity: 0.24;
     transform: scale(0.84);
+    transform-origin: center;
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    opacity: 0.2;
+    transform: scale(0.72);
     transform-origin: center;
   }
 
@@ -177,28 +151,26 @@ const Ring = styled.div<{ $variant: ProjectSlug }>`
   }
 `;
 
-const RingSoft = styled.div<{ $variant: ProjectSlug }>`
+export const SeedbankRingSoft = styled.div`
   position: absolute;
   z-index: 0;
+  right: 16%;
+  top: 28%;
   width: clamp(10rem, 18vw, 15rem);
   height: clamp(10rem, 18vw, 15rem);
   border: 1px solid rgba(255, 255, 255, 0.04);
   border-radius: 50%;
   opacity: 0.3;
-  ${({ $variant }) =>
-    $variant === 'vortic'
-      ? css`
-          right: 4%;
-          top: 24%;
-        `
-      : css`
-          right: 16%;
-          top: 28%;
-        `}
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     opacity: 0.22;
     transform: scale(0.84);
+    transform-origin: center;
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    opacity: 0.16;
+    transform: scale(0.72);
     transform-origin: center;
   }
 
@@ -207,7 +179,7 @@ const RingSoft = styled.div<{ $variant: ProjectSlug }>`
   }
 `;
 
-const Header = styled.header`
+export const SeedbankHeader = styled.header`
   position: relative;
   z-index: 1;
   display: flex;
@@ -220,19 +192,27 @@ const Header = styled.header`
     align-items: stretch;
     gap: 0.7rem;
   }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    gap: 0.75rem;
+  }
 `;
 
-const HeaderCopy = styled.div`
+export const SeedbankHeaderCopy = styled.div`
   display: grid;
   gap: 0.85rem;
-  max-width: 36rem;
+  max-width: 40rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     gap: 0.65rem;
   }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    gap: 0.6rem;
+  }
 `;
 
-const ProjectTag = styled(Tag)`
+export const SeedbankProjectTag = styled(Tag)`
   justify-self: start;
   margin-left: -1rem;
 
@@ -245,7 +225,7 @@ const ProjectTag = styled(Tag)`
   }
 `;
 
-const LinkRow = styled.div`
+export const SeedbankLinkRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -254,48 +234,15 @@ const LinkRow = styled.div`
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     justify-content: flex-start;
   }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    gap: 0.45rem;
+  }
 `;
 
-export function ProjectScreenChrome({
-  projectSlug,
-  projectTitle,
-  projectTagline,
-  projectLinks,
-  showProjectTag,
-  showTagline,
-  showSmallOrb,
-  children
-}: ProjectScreenChromeProps) {
-  return (
-    <Root>
-      <Page>
-        <OrbLarge $variant={projectSlug} />
-        {showSmallOrb ? <OrbSmall $variant={projectSlug} /> : null}
-        <Ring $variant={projectSlug} />
-        <RingSoft $variant={projectSlug} />
-
-        <Header>
-          <HeaderCopy>
-            {showProjectTag ? <ProjectTag>{projectTitle}</ProjectTag> : null}
-            {showTagline ? <Eyebrow>{projectTagline}</Eyebrow> : null}
-          </HeaderCopy>
-
-          <LinkRow>
-            {projectLinks.map((link) => (
-              <ActionPillLink
-                key={link.label}
-                href={link.href}
-                rel={link.external ? 'noreferrer' : undefined}
-                target={link.external ? '_blank' : undefined}
-              >
-                {link.label}
-              </ActionPillLink>
-            ))}
-          </LinkRow>
-        </Header>
-
-        {children}
-      </Page>
-    </Root>
-  );
-}
+export const SeedbankSectionSlot = styled.div`
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  height: 100%;
+`;

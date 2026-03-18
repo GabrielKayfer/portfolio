@@ -1,4 +1,14 @@
 export const tokens = {
+  viewport: {
+    base: {
+      width: 1917,
+      height: 944
+    },
+    heights: {
+      short: '58rem',
+      compact: '52rem'
+    }
+  },
   colors: {
     neutral: {
       background: '#050505',
@@ -65,9 +75,11 @@ export const tokens = {
     section: 'clamp(4rem, 8vw, 7rem)'
   },
   width: {
-    content: 'min(100% - 2rem, 74rem)',
-    wide: 'min(100% - 2rem, 82rem)',
-    narrow: 'min(100% - 2rem, 54rem)'
+    content: 'min(100% - clamp(1.5rem, 4vw, 4rem), 88rem)',
+    wide: 'min(100% - clamp(2rem, 5vw, 5.5rem), 108rem)',
+    narrow: 'min(100% - clamp(1.5rem, 3vw, 3rem), 60rem)',
+    homeFrame: 'min(100%, 92rem)',
+    projectFrame: 'min(100%, 108rem)'
   },
   radius: {
     sm: '0.75rem',
@@ -92,8 +104,9 @@ export const tokens = {
     }
   },
   breakpoints: {
-    sm: '30rem',
-    md: '48rem',
-    lg: '64rem'
+    sm: '40rem',
+    md: '56rem',
+    lg: '72rem',
+    xl: '90rem'
   }
 } as const;

@@ -1,5 +1,5 @@
 import { ActionPillButton } from './ActionPill';
-import { PanelMediaHeader } from './ProjectPanelPrimitives';
+import { PanelMediaHeader } from './ProjectPagePrimitives';
 
 interface MediaSequenceControlsProps {
   onNext: () => void;

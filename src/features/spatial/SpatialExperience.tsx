@@ -14,6 +14,7 @@ import { RouteSeo } from '../../components/seo/RouteSeo';
 import { projectsBySlug } from '../../content/projects';
 import { siteContent } from '../../content/site';
 import { NotFoundPage } from '../../pages/NotFoundPage';
+import { HomePage } from '../../pages/Home';
 import { createTheme } from '../../styles/theme';
 import {
   areNodesDirectNeighbors,
@@ -24,7 +25,6 @@ import {
   type SpatialNode,
   type SpatialNodeId
 } from './config';
-import { HomeSpatialScreen } from './screens/HomeSpatialScreen';
 import { ProjectSpatialScreen } from './screens/ProjectSpatialScreen';
 
 const TRANSITION_DURATION_MS = 720;
@@ -101,9 +101,19 @@ const ScreenScene = styled.div<{ $interactive: boolean }>`
     clamp(3.5rem, 6vh, 4.5rem);
   pointer-events: ${({ $interactive }) => ($interactive ? 'auto' : 'none')};
 
+  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
+    padding: clamp(4rem, 6.5vh, 5rem) clamp(2rem, 4.4vw, 3.6rem)
+      clamp(3.4rem, 5.8vh, 4.2rem);
+  }
+
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     padding: clamp(4rem, 6vh, 5rem) clamp(1rem, 4vw, 2rem)
       clamp(3.75rem, 6.5vh, 4.75rem);
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    padding: clamp(2.8rem, 4.8vh, 3.8rem) clamp(1.4rem, 3.8vw, 2.4rem)
+      clamp(2.35rem, 4.2vh, 3rem);
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -816,7 +826,7 @@ export function SpatialExperience() {
       <ThemeProvider theme={createTheme(getNodeThemeKey(node))}>
         <ScreenScene $interactive={interactive}>
           {node.id === 'home' ? (
-            <HomeSpatialScreen />
+            <HomePage />
           ) : project ? (
             <ProjectSpatialScreen
               isActive={interactive}
