@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Eyebrow } from '../../components/ui/Eyebrow';
-import { ActionPillLink } from '../../components/ui/ActionPill';
 import type { ProjectDeckPage } from '../../features/spatial/projectPages';
 import type { ProjectContent } from '../../types/content';
 import { ConstructionSection } from './sections/ConstructionSection';
@@ -10,6 +8,8 @@ import { OverviewSection } from './sections/OverviewSection';
 import {
   AmoraeHeader,
   AmoraeHeaderCopy,
+  AmoraeHeaderEyebrow,
+  AmoraeHeaderLink,
   AmoraeLinkRow,
   AmoraeOrbLarge,
   AmoraeOrbSmall,
@@ -33,10 +33,12 @@ export function ProjectAmoraePage({
   isActive
 }: ProjectAmoraePageProps) {
   const [experienceMediaIndex, setExperienceMediaIndex] = useState(0);
+  const [constructionMediaIndex, setConstructionMediaIndex] = useState(0);
   const isOverview = activePage.id === 'overview';
 
   useEffect(() => {
     setExperienceMediaIndex(0);
+    setConstructionMediaIndex(0);
   }, [activePage.id]);
 
   const handleNextExperienceImage = () => {
@@ -53,6 +55,20 @@ export function ProjectAmoraePage({
     );
   };
 
+  const handleNextConstructionImage = () => {
+    const mediaLength = [activePage.media, ...(activePage.gallery ?? [])].slice(0, 2).length;
+    setConstructionMediaIndex((current) =>
+      current === mediaLength - 1 ? 0 : current + 1
+    );
+  };
+
+  const handlePreviousConstructionImage = () => {
+    const mediaLength = [activePage.media, ...(activePage.gallery ?? [])].slice(0, 2).length;
+    setConstructionMediaIndex((current) =>
+      current === 0 ? mediaLength - 1 : current - 1
+    );
+  };
+
   return (
     <AmoraePageRoot>
       <AmoraePageFrame>
@@ -64,19 +80,21 @@ export function ProjectAmoraePage({
         <AmoraeHeader>
           <AmoraeHeaderCopy>
             {isOverview ? <AmoraeProjectTag>{project.title}</AmoraeProjectTag> : null}
-            {isOverview ? <Eyebrow>{project.tagline}</Eyebrow> : null}
+            {isOverview ? (
+              <AmoraeHeaderEyebrow>{project.tagline}</AmoraeHeaderEyebrow>
+            ) : null}
           </AmoraeHeaderCopy>
 
           <AmoraeLinkRow>
             {project.links.map((link) => (
-              <ActionPillLink
+              <AmoraeHeaderLink
                 key={link.label}
                 href={link.href}
                 rel={link.external ? 'noreferrer' : undefined}
                 target={link.external ? '_blank' : undefined}
               >
                 {link.label}
-              </ActionPillLink>
+              </AmoraeHeaderLink>
             ))}
           </AmoraeLinkRow>
         </AmoraeHeader>
@@ -95,7 +113,13 @@ export function ProjectAmoraePage({
               onPreviousImage={handlePreviousExperienceImage}
             />
           ) : (
-            <ConstructionSection activePage={activePage} isActive={isActive} />
+            <ConstructionSection
+              activePage={activePage}
+              isActive={isActive}
+              mediaIndex={constructionMediaIndex}
+              onNextImage={handleNextConstructionImage}
+              onPreviousImage={handlePreviousConstructionImage}
+            />
           )}
         </AmoraeSectionSlot>
       </AmoraePageFrame>

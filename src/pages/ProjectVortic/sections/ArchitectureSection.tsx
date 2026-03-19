@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import { MediaSequenceControls } from '../../../components/ui/MediaSequenceControls';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
@@ -11,7 +10,8 @@ import {
   PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening,
+  ProjectSectionSummary as SectionSummary
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface ArchitectureSectionProps {
@@ -82,10 +82,12 @@ const VisualColumn = styled.section`
   grid-template-rows: minmax(0, 1fr) auto auto;
   gap: max(0.62rem, calc(0.82rem * var(--architecture-scale)));
   align-content: stretch;
+  justify-items: end;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     grid-column: 1 / -1;
     height: auto;
+    justify-items: stretch;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -93,13 +95,11 @@ const VisualColumn = styled.section`
   }
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(SectionOpening)`
   max-width: 9.1ch;
-  font-size: clamp(1.35rem, calc(2.05rem * var(--architecture-scale)), 2.05rem);
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     max-width: 11.5ch;
-    font-size: clamp(1.28rem, 6.4vw, 1.82rem);
   }
 `;
 
@@ -107,24 +107,38 @@ const StoryFlow = styled(StoryScroll)`
   max-width: clamp(16rem, calc(28rem * var(--architecture-scale)), 28rem);
   height: 100%;
   gap: max(0.56rem, calc(0.7rem * var(--architecture-scale)));
-  overflow: auto;
-  padding-right: 0.1rem;
+  overflow: visible;
+  padding-right: 0;
   max-height: none;
 `;
 
 const PreviewViewport = styled.div`
-  width: min(100%, clamp(23rem, calc(39rem * var(--architecture-scale)), 39rem));
-  height: min(100%, clamp(12rem, calc(21rem * var(--architecture-scale)), 21rem));
+  width: 100%;
   min-height: 0;
+  height: 100%;
   display: grid;
-  align-items: center;
-  justify-items: center;
-  justify-self: start;
+  align-items: stretch;
+  justify-items: stretch;
+  justify-self: stretch;
+  align-self: stretch;
+  padding-right: max(0.82rem, calc(1.1rem * var(--architecture-scale)));
+  overflow: hidden;
+
+  & > figure {
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  & > figure > div {
+    max-height: 100%;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     width: 100%;
     height: clamp(12rem, 30vh, 18rem);
     max-width: 40rem;
+    padding-right: 0;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -132,7 +146,18 @@ const PreviewViewport = styled.div`
   }
 
   @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
-    height: min(100%, clamp(10rem, calc(16rem * var(--architecture-scale)), 16rem));
+    min-height: clamp(10rem, calc(16rem * var(--architecture-scale)), 16rem);
+  }
+`;
+
+const ControlRow = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: max(0.82rem, calc(1.1rem * var(--architecture-scale)));
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    padding-right: 0;
   }
 `;
 
@@ -157,16 +182,6 @@ const ArchitectureCard = styled(DetailCard)`
   padding:
     max(0.54rem, calc(0.62rem * var(--architecture-scale)))
     max(0.6rem, calc(0.7rem * var(--architecture-scale)));
-
-  ${DetailLabel} {
-    font-size: max(0.56rem, calc(0.64rem * var(--architecture-scale)));
-    letter-spacing: 0.1em;
-  }
-
-  ${DetailBody} {
-    font-size: max(0.74rem, calc(0.8rem * var(--architecture-scale)));
-    line-height: 1.46;
-  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     padding: 0.6rem 0.66rem;
@@ -199,7 +214,9 @@ export function ArchitectureSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <SectionSummary key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </SectionSummary>
           ))}
         </StoryFlow>
       </StoryColumn>
@@ -208,18 +225,22 @@ export function ArchitectureSection({
         <PreviewViewport>
           <ResponsiveMedia
             asset={mediaItems[mediaIndex] ?? activePage.media}
-            fit="contain"
-            frameSizing="fit-media"
+            fit="cover"
+            frameSizing="viewport-fill"
+            cornerStyle="card"
+            objectPosition="top right"
             priority={isActive}
             surfaceVariant="framed"
           />
         </PreviewViewport>
 
         {mediaItems.length > 1 ? (
-          <MediaSequenceControls
-            onNext={onNextImage}
-            onPrevious={onPreviousImage}
-          />
+          <ControlRow>
+            <MediaSequenceControls
+              onNext={onNextImage}
+              onPrevious={onPreviousImage}
+            />
+          </ControlRow>
         ) : null}
 
         {rightDetails.length ? (

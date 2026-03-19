@@ -1,5 +1,10 @@
 import styled from 'styled-components';
+import { ActionPillLink } from '../../components/ui/ActionPill';
+import { Eyebrow } from '../../components/ui/Eyebrow';
 import { Tag } from '../../components/ui/Tag';
+import { projectFrameShell } from '../projectFrame';
+import { projectHeaderVars } from '../projectHeader';
+import { projectTypographyVars } from '../projectTypography';
 
 export const AmoraePageRoot = styled.section`
   height: 100%;
@@ -12,49 +17,20 @@ export const AmoraePageRoot = styled.section`
 `;
 
 export const AmoraePageFrame = styled.article`
+  ${projectTypographyVars}
+  ${projectHeaderVars}
+  ${projectFrameShell}
+
   position: relative;
   box-sizing: border-box;
-  width: ${({ theme }) => theme.width.projectFrame};
-  height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: clamp(0.95rem, 1.2vw, 1.15rem);
-  padding:
-    clamp(1.2rem, 1.8vw, 1.8rem)
-    clamp(1.5rem, 2.5vw, 2.8rem)
-    clamp(2.4rem, 4vw, 3.4rem);
   background:
     radial-gradient(circle at 76% 24%, rgba(255, 255, 255, 0.06), transparent 14%),
     radial-gradient(circle at 70% 72%, rgba(255, 255, 255, 0.04), transparent 24%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.012), rgba(255, 255, 255, 0)),
+    ${({ theme }) => theme.colors.surface};
   overflow: hidden;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    width: min(100%, 94rem);
-    padding:
-      clamp(1rem, 1.5vw, 1.4rem)
-      clamp(1.15rem, 2vw, 1.9rem)
-      clamp(2rem, 3vw, 2.8rem);
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-    width: 100%;
-    gap: 1rem;
-    padding: 1rem 1rem 2.4rem;
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
-    gap: 0.8rem;
-    padding: 0.82rem 0.9rem 1.2rem;
-    overflow: hidden;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    gap: 0.85rem;
-    padding: 0.8rem 0.8rem 2rem;
-  }
 `;
 
 const OrbBase = styled.div`
@@ -185,7 +161,7 @@ export const AmoraeHeader = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: start;
-  gap: 0.9rem;
+  gap: var(--project-header-gap);
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     flex-direction: column;
@@ -200,7 +176,9 @@ export const AmoraeHeader = styled.header`
 
 export const AmoraeHeaderCopy = styled.div`
   display: grid;
-  gap: 0.85rem;
+  justify-items: start;
+  align-content: start;
+  gap: var(--project-header-copy-gap);
   max-width: 40rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -214,22 +192,25 @@ export const AmoraeHeaderCopy = styled.div`
 
 export const AmoraeProjectTag = styled(Tag)`
   justify-self: start;
-  margin-left: -1rem;
+  max-width: 100%;
+  min-height: var(--project-header-tag-height);
+  padding-inline: var(--project-header-tag-padding-x);
+  font-size: var(--project-header-tag-size);
+  letter-spacing: var(--project-header-tag-spacing);
+`;
 
-  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-    margin-left: -0.8rem;
-  }
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    margin-left: -0.45rem;
-  }
+export const AmoraeHeaderEyebrow = styled(Eyebrow)`
+  max-width: 100%;
+  gap: var(--project-header-eyebrow-gap);
+  font-size: var(--project-header-eyebrow-size);
+  letter-spacing: var(--project-header-eyebrow-spacing);
 `;
 
 export const AmoraeLinkRow = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 0.55rem;
+  gap: var(--project-header-link-gap);
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     justify-content: flex-start;
@@ -238,6 +219,15 @@ export const AmoraeLinkRow = styled.div`
   @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
     gap: 0.45rem;
   }
+`;
+
+export const AmoraeHeaderLink = styled(ActionPillLink)`
+  min-height: var(--project-header-link-height);
+  padding:
+    var(--project-header-link-padding-y)
+    var(--project-header-link-padding-x);
+  font-size: var(--project-header-link-size);
+  letter-spacing: var(--project-header-link-spacing);
 `;
 
 export const AmoraeSectionSlot = styled.div`

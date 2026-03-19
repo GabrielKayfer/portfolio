@@ -5,7 +5,7 @@ export const siteContent: SiteContent = {
     siteName: 'Gabriel Lira',
     defaultTitle: 'Gabriel Lira | Desenvolvedor Full Stack',
     defaultDescription:
-      'Portfolio de Gabriel Lira, desenvolvedor full stack com foco em interface, estrutura de produto, integracao entre frontend, backend e IA aplicada.',
+      'Portfólio de Gabriel Lira, desenvolvedor full stack com foco em interface, estrutura de produto, integração entre frontend, backend e IA aplicada.',
     ogImage: '/media/amorae/homeAmorae.png'
   },
   brand: {
@@ -72,16 +72,16 @@ export const siteContent: SiteContent = {
       items: [
         {
           title: 'Stack principal',
-          description: 'Base principal de trabalho em aplicacoes web.',
+          description: 'Base principal de trabalho em aplicações web.',
           items: ['React', 'TypeScript', 'Node.js', 'APIs REST', 'IA aplicada']
         }
       ],
-      areasOfInterestTitle: 'Atuacao',
+      areasOfInterestTitle: 'Atuação',
       areasOfInterest: [
         'Interface',
         'Produto',
         'Backend',
-        'Integracao com APIs',
+        'Integração com APIs',
         'Fluxos autenticados',
         'IA aplicada'
       ]

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
   PanelChapterIndex as ChapterIndex,
@@ -9,7 +8,8 @@ import {
   PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening,
+  ProjectSectionSummary as SectionSummary
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface AuthenticationSectionProps {
@@ -18,13 +18,16 @@ interface AuthenticationSectionProps {
 }
 
 const Layout = styled.div`
+  --auth-media-card-gap: 0.55rem;
+
   position: relative;
   z-index: 1;
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(18rem, 0.86fr) minmax(17rem, 1fr) minmax(17rem, 1fr);
   gap: 1rem;
-  align-items: start;
+  align-items: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
     grid-template-columns:
@@ -46,37 +49,75 @@ const Layout = styled.div`
 
 const TextColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0.9rem;
-  align-content: start;
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     grid-column: 1 / -1;
+    height: auto;
   }
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(SectionOpening)`
   max-width: 10.4ch;
-  font-size: clamp(1.7rem, 2.7vw, 2.5rem);
 `;
 
 const StoryFlow = styled(StoryScroll)`
-  max-width: 28rem;
+  width: 100%;
   overflow: visible;
   padding-right: 0;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    max-height: none;
-  }
+  max-height: none;
+  max-width: none;
 `;
 
 const MediaColumn = styled.div`
+  min-height: 0;
+  height: 100%;
   display: grid;
-  gap: 0.7rem;
-  align-content: start;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--auth-media-card-gap);
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    gap: 0.6rem;
+    gap: var(--auth-media-card-gap);
+  }
+`;
+
+const MediaViewport = styled.div`
+  min-height: 0;
+  height: 100%;
+  min-height: min(38vh, 24rem);
+  display: grid;
+  align-items: center;
+  justify-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  justify-self: stretch;
+  overflow: hidden;
+
+  & > figure {
+    min-height: 0;
+    height: 100%;
+    max-width: 100%;
+  }
+
+  & > figure > div {
+    max-height: 100%;
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    min-height: min(34vh, 20rem);
+  }
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    min-height: min(28vh, 16rem);
+  }
+
+  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
+    min-height: min(28vh, 16.5rem);
   }
 `;
 
@@ -106,20 +147,26 @@ export function AuthenticationSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <SectionSummary key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </SectionSummary>
           ))}
         </StoryFlow>
       </TextColumn>
 
       {media.map((asset, index) => (
         <MediaColumn key={`${activePage.id}-${asset.src}-${index}`}>
-          <ResponsiveMedia
-            asset={asset}
-            fit="contain"
-            frameSizing="fill"
-            priority={index === 0 ? isActive : false}
-            surfaceVariant="framed"
-          />
+          <MediaViewport>
+            <ResponsiveMedia
+              asset={asset}
+              fit="cover"
+              frameSizing="viewport-fill"
+              cornerStyle="card"
+              objectPosition="top center"
+              priority={index === 0 ? isActive : false}
+              surfaceVariant="framed"
+            />
+          </MediaViewport>
 
           {details[index] ? (
             <MediaCard $compact={false}>

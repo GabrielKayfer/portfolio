@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
   PanelChapterIndex as ChapterIndex,
+  PanelDetailBody as DetailBody,
   PanelDetailCard as DetailCard,
   PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening,
+  ProjectSectionSummary as SectionSummary
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface LogicSectionProps {
@@ -20,6 +21,7 @@ const Layout = styled.div`
   --logic-scale-width: clamp(0.72, calc(100vw / 1920px), 1);
   --logic-scale-height: clamp(0.62, calc(100svh / 945px), 1);
   --logic-scale: min(var(--logic-scale-width), var(--logic-scale-height));
+  --logic-media-card-gap: max(0.5rem, calc(0.62rem * var(--logic-scale)));
 
   position: relative;
   z-index: 1;
@@ -66,10 +68,9 @@ const StoryColumn = styled.section`
 const MediaColumn = styled.section`
   min-height: 0;
   height: 100%;
-  display: grid;
-  grid-template-rows: minmax(0, 1.08fr) auto;
-  gap: max(0.58rem, calc(0.78rem * var(--logic-scale)));
-  align-content: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--logic-media-card-gap);
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     height: auto;
@@ -77,19 +78,16 @@ const MediaColumn = styled.section`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) and (max-height: ${({ theme }) =>
       theme.viewport.heights.compact}) {
-    grid-template-rows: auto auto;
-    gap: max(0.4rem, calc(0.5rem * var(--logic-scale)));
-    align-content: start;
+    gap: var(--logic-media-card-gap);
   }
 `;
 
 const SideColumn = styled.section`
   min-height: 0;
   height: 100%;
-  display: grid;
-  grid-template-rows: minmax(0, 1.02fr) auto;
-  gap: max(0.58rem, calc(0.78rem * var(--logic-scale)));
-  align-content: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: var(--logic-media-card-gap);
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     height: auto;
@@ -97,19 +95,15 @@ const SideColumn = styled.section`
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) and (max-height: ${({ theme }) =>
       theme.viewport.heights.compact}) {
-    grid-template-rows: auto auto;
-    gap: max(0.4rem, calc(0.5rem * var(--logic-scale)));
-    align-content: start;
+    gap: var(--logic-media-card-gap);
   }
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(SectionOpening)`
   max-width: 9ch;
-  font-size: clamp(1.28rem, calc(1.95rem * var(--logic-scale)), 1.95rem);
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     max-width: 12ch;
-    font-size: clamp(1.35rem, 7vw, 1.8rem);
   }
 `;
 
@@ -117,36 +111,47 @@ const StoryFlow = styled(StoryScroll)`
   max-width: clamp(15rem, calc(26rem * var(--logic-scale)), 26rem);
   height: 100%;
   gap: max(0.56rem, calc(0.68rem * var(--logic-scale)));
-  overflow: auto;
-  padding-right: 0.1rem;
+  overflow: visible;
+  padding-right: 0;
   max-height: none;
-
-  & > p {
-    font-size: max(0.84rem, calc(0.94rem * var(--logic-scale)));
-    line-height: 1.58;
-  }
 `;
 
 const PreviewViewport = styled.div`
+  flex: 1 1 0;
   width: 100%;
-  height: min(100%, clamp(11rem, calc(17.2rem * var(--logic-scale)), 17.2rem));
   min-height: 0;
+  height: 100%;
   display: grid;
-  align-items: center;
-  justify-items: center;
+  align-items: stretch;
+  justify-items: stretch;
+  align-self: stretch;
+  overflow: hidden;
+
+  & > figure {
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  & > figure > div {
+    max-height: 100%;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-    height: clamp(11.5rem, 29vh, 16.2rem);
+    height: clamp(10.8rem, 26vh, 14.8rem);
+    flex: 0 0 auto;
   }
 
   @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
-    height: min(100%, clamp(10rem, calc(14.4rem * var(--logic-scale)), 14.4rem));
+    min-height: clamp(9.4rem, calc(13rem * var(--logic-scale)), 13rem);
   }
 `;
 
 const DetailStack = styled.div`
+  width: 100%;
   display: grid;
   gap: max(0.46rem, calc(0.6rem * var(--logic-scale)));
+  flex: 0 0 auto;
   align-content: start;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) and (max-height: ${({ theme }) =>
@@ -156,6 +161,8 @@ const DetailStack = styled.div`
 `;
 
 const LogicCard = styled(DetailCard)`
+  width: 100%;
+  justify-self: stretch;
   gap: max(0.14rem, calc(0.18rem * var(--logic-scale)));
   min-height: auto;
   padding:
@@ -168,15 +175,9 @@ const LogicCard = styled(DetailCard)`
   }
 `;
 
-const LogicCardBody = styled(BodyText)`
-  font-size: max(0.7rem, calc(0.76rem * var(--logic-scale)));
-  line-height: 1.42;
-`;
+const LogicCardBody = styled(DetailBody)``;
 
-const LogicCardLabel = styled(DetailLabel)`
-  font-size: max(0.56rem, calc(0.62rem * var(--logic-scale)));
-  letter-spacing: 0.1em;
-`;
+const LogicCardLabel = styled(DetailLabel)``;
 
 export function LogicSection({
   activePage,
@@ -196,7 +197,9 @@ export function LogicSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <SectionSummary key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </SectionSummary>
           ))}
         </StoryFlow>
       </StoryColumn>
@@ -206,8 +209,10 @@ export function LogicSection({
           <PreviewViewport>
             <ResponsiveMedia
               asset={media[0]}
-              fit="contain"
-              frameSizing="fit-media"
+              fit="cover"
+              frameSizing="viewport-fill"
+              cornerStyle="card"
+              objectPosition="top center"
               priority={isActive}
               surfaceVariant="plain"
             />
@@ -219,7 +224,7 @@ export function LogicSection({
             {middleColumnDetails.map((item) => (
               <LogicCard key={`${activePage.id}-${item.label}`} $compact>
                 <LogicCardLabel>{item.label}</LogicCardLabel>
-                <LogicCardBody>{item.value}</LogicCardBody>
+                <LogicCardBody $compact>{item.value}</LogicCardBody>
               </LogicCard>
             ))}
           </DetailStack>
@@ -231,8 +236,10 @@ export function LogicSection({
           <PreviewViewport>
             <ResponsiveMedia
               asset={media[1]}
-              fit="contain"
-              frameSizing="fit-media"
+              fit="cover"
+              frameSizing="viewport-fill"
+              cornerStyle="card"
+              objectPosition="top center"
               priority={false}
               surfaceVariant="plain"
             />
@@ -243,7 +250,7 @@ export function LogicSection({
           <DetailStack>
             <LogicCard $compact>
               <LogicCardLabel>{sideColumnDetail.label}</LogicCardLabel>
-              <LogicCardBody>{sideColumnDetail.value}</LogicCardBody>
+              <LogicCardBody $compact>{sideColumnDetail.value}</LogicCardBody>
             </LogicCard>
           </DetailStack>
         ) : null}

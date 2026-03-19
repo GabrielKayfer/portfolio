@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
-  PanelDetailBody as DetailBody,
   PanelDetailCard as DetailCard,
-  PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectOverviewCardBody,
+  ProjectOverviewCardTitle,
+  ProjectStackLine,
+  ProjectOverviewTitle,
+  ProjectSummaryText
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface OverviewSectionProps {
@@ -27,13 +28,14 @@ const Layout = styled.div`
   position: relative;
   z-index: 1;
   min-height: 0;
+  height: 100%;
   display: grid;
-  grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1.22fr);
+  grid-template-columns: minmax(19.5rem, 0.86fr) minmax(0, 1.14fr);
   gap: max(0.82rem, calc(1.18rem * var(--vortic-overview-scale)));
   align-items: start;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
-    grid-template-columns: minmax(15.5rem, 0.72fr) minmax(0, 1.28fr);
+    grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr);
     gap: max(0.72rem, calc(0.96rem * var(--vortic-overview-scale)));
   }
 
@@ -52,38 +54,27 @@ const StoryColumn = styled.section`
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: max(0.72rem, calc(0.9rem * var(--vortic-overview-scale)));
-  width: min(100%, clamp(18.5rem, calc(31rem * var(--vortic-overview-scale)), 31rem));
+  width: min(100%, clamp(20rem, calc(34.5rem * var(--vortic-overview-scale)), 34.5rem));
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(ProjectOverviewTitle)`
   max-width: 12.5ch;
-  font-size: clamp(
-    1.18rem,
-    calc(1.95rem * var(--vortic-overview-scale)),
-    1.95rem
-  );
 `;
 
 const StoryFlow = styled(StoryScroll)`
   gap: max(0.62rem, calc(0.82rem * var(--vortic-overview-scale)));
-  max-width: clamp(18.5rem, calc(31rem * var(--vortic-overview-scale)), 31rem);
+  max-width: clamp(20rem, calc(34.5rem * var(--vortic-overview-scale)), 34.5rem);
   overflow: visible;
   max-height: none;
   padding-right: 0;
-
-  & > p {
-    font-size: max(0.84rem, calc(0.98rem * var(--vortic-overview-scale)));
-    line-height: 1.58;
-  }
 `;
 
-const StackLine = styled.p`
-  color: ${({ theme }) => theme.colors.textMuted};
-  font-family: ${({ theme }) => theme.typography.fontMono};
-  font-size: max(0.62rem, calc(0.76rem * var(--vortic-overview-scale)));
-  line-height: 1.62;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+const StackLine = styled(ProjectStackLine)`
+  width: max-content;
+  min-width: 100%;
+  max-width: none;
+  overflow: visible;
+  text-overflow: clip;
 `;
 
 const ContentColumn = styled.section`
@@ -198,16 +189,6 @@ const OverviewCard = styled(DetailCard)`
     max(0.56rem, calc(0.76rem * var(--vortic-overview-scale)))
     max(0.6rem, calc(0.82rem * var(--vortic-overview-scale)));
   gap: max(0.18rem, calc(0.24rem * var(--vortic-overview-scale)));
-
-  ${DetailLabel} {
-    font-size: max(0.54rem, calc(0.62rem * var(--vortic-overview-scale)));
-    letter-spacing: 0.09em;
-  }
-
-  ${DetailBody} {
-    font-size: max(0.72rem, calc(0.82rem * var(--vortic-overview-scale)));
-    line-height: 1.48;
-  }
 `;
 
 export function OverviewSection({
@@ -223,7 +204,9 @@ export function OverviewSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <ProjectSummaryText key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </ProjectSummaryText>
           ))}
 
           {activePage.highlights.length ? (
@@ -251,8 +234,8 @@ export function OverviewSection({
           <DetailGrid>
             {activePage.details.map((item) => (
               <OverviewCard key={`${activePage.id}-${item.label}`} $compact={false}>
-                <DetailLabel>{item.label}</DetailLabel>
-                <DetailBody $compact={false}>{item.value}</DetailBody>
+                <ProjectOverviewCardTitle>{item.label}</ProjectOverviewCardTitle>
+                <ProjectOverviewCardBody>{item.value}</ProjectOverviewCardBody>
               </OverviewCard>
             ))}
           </DetailGrid>

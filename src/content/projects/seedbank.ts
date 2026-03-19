@@ -73,9 +73,7 @@ export const seedbankProject: ProjectContent = {
       eyebrow: 'ÁREA PROTEGIDA',
       title:
         'Desenvolvimento guiado por estrutura e evolução. Interface, sistema e IA não foram tratados como peças independentes, mas como partes de uma mesma experiência de produto.',
-      body: [
-        'Entre as decisões técnicas mais importantes do projeto estão: autenticação demo via requisições reais para evitar um fluxo artificial demais, persistência de token e restauração de sessão para manter continuidade, proteção de rota para a área interna, backend intermediando a IA para controlar escopo e contexto, e desacoplamento entre frontend e backend para permitir deploy e evolução independentes.'
-      ],
+      body: [],
       media: {
         kind: 'video',
         src: '/media/seedbank/usandoChatSeedBank.mp4',

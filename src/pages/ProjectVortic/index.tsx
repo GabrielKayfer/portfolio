@@ -1,6 +1,4 @@
 import { useEffect, useState } from 'react';
-import { Eyebrow } from '../../components/ui/Eyebrow';
-import { ActionPillLink } from '../../components/ui/ActionPill';
 import type { ProjectDeckPage } from '../../features/spatial/projectPages';
 import type { ProjectContent } from '../../types/content';
 import { ArchitectureSection } from './sections/ArchitectureSection';
@@ -10,6 +8,8 @@ import { OverviewSection } from './sections/OverviewSection';
 import {
   VorticHeader,
   VorticHeaderCopy,
+  VorticHeaderEyebrow,
+  VorticHeaderLink,
   VorticLinkRow,
   VorticOrbLarge,
   VorticOrbSmall,
@@ -68,19 +68,21 @@ export function ProjectVorticPage({
         <VorticHeader>
           <VorticHeaderCopy>
             {isOverview ? <VorticProjectTag>{project.title}</VorticProjectTag> : null}
-            {isOverview ? <Eyebrow>{project.tagline}</Eyebrow> : null}
+            {isOverview ? (
+              <VorticHeaderEyebrow>{project.tagline}</VorticHeaderEyebrow>
+            ) : null}
           </VorticHeaderCopy>
 
           <VorticLinkRow>
             {project.links.map((link) => (
-              <ActionPillLink
+              <VorticHeaderLink
                 key={link.label}
                 href={link.href}
                 rel={link.external ? 'noreferrer' : undefined}
                 target={link.external ? '_blank' : undefined}
               >
                 {link.label}
-              </ActionPillLink>
+              </VorticHeaderLink>
             ))}
           </VorticLinkRow>
         </VorticHeader>

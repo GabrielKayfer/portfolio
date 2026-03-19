@@ -1,14 +1,14 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
-  PanelDetailBody as DetailBody,
   PanelDetailCard as DetailCard,
-  PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectOverviewCardBody,
+  ProjectStackLine,
+  ProjectOverviewTitle,
+  ProjectSummaryText
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface OverviewSectionProps {
@@ -20,6 +20,7 @@ const Layout = styled.div`
   position: relative;
   z-index: 1;
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(26rem, 0.92fr) minmax(0, 1.08fr);
   gap: clamp(1rem, 1.4vw, 1.4rem);
@@ -47,9 +48,8 @@ const StoryColumn = styled.section`
   gap: 1rem;
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(ProjectOverviewTitle)`
   max-width: 12.5ch;
-  font-size: clamp(1.3rem, 1.95vw, 1.95rem);
 `;
 
 const StoryFlow = styled(StoryScroll)`
@@ -58,14 +58,7 @@ const StoryFlow = styled(StoryScroll)`
   padding-right: 0;
 `;
 
-const StackLine = styled.p`
-  color: ${({ theme }) => theme.colors.textMuted};
-  font-family: ${({ theme }) => theme.typography.fontMono};
-  font-size: 0.76rem;
-  line-height: 1.62;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-`;
+const StackLine = styled(ProjectStackLine)``;
 
 const ContentColumn = styled.section`
   min-height: 0;
@@ -73,6 +66,7 @@ const ContentColumn = styled.section`
   grid-template-rows: auto auto;
   gap: 0.85rem;
   align-content: start;
+  justify-items: center;
 `;
 
 const MediaViewport = styled.div`
@@ -120,21 +114,25 @@ const Artwork = styled.div`
 `;
 
 const OverviewCard = styled(DetailCard)`
-  width: min(100%, 36rem);
+  width: 100%;
   min-height: auto;
-  justify-self: start;
+  justify-self: center;
   align-self: start;
   align-content: start;
   grid-auto-rows: max-content;
   gap: 0.24rem;
+`;
 
-  ${DetailLabel} {
-    display: block;
-    margin: 0;
-  }
+const CardShelf = styled.div`
+  width: min(100%, 36rem);
+  display: grid;
+  justify-items: center;
+  padding-top: 0.78rem;
+  border-top: 1px solid ${({ theme }) => theme.colors.divider};
 
-  ${DetailBody} {
-    margin: 0;
+  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
+    width: 100%;
+    padding-top: 0.68rem;
   }
 `;
 
@@ -151,7 +149,9 @@ export function OverviewSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <ProjectSummaryText key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </ProjectSummaryText>
           ))}
 
           {activePage.highlights.length ? (
@@ -174,10 +174,13 @@ export function OverviewSection({
         </MediaViewport>
 
         {activePage.details[0] ? (
-          <OverviewCard $compact={false}>
-            <DetailLabel>{activePage.details[0].label}</DetailLabel>
-            <DetailBody $compact={false}>{activePage.details[0].value}</DetailBody>
-          </OverviewCard>
+          <CardShelf>
+            <OverviewCard $compact={false}>
+              <ProjectOverviewCardBody>
+                {activePage.details[0].value}
+              </ProjectOverviewCardBody>
+            </OverviewCard>
+          </CardShelf>
         ) : null}
       </ContentColumn>
     </Layout>

@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import { MediaSequenceControls } from '../../../components/ui/MediaSequenceControls';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
@@ -10,7 +9,8 @@ import {
   PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening,
+  ProjectSectionSummary as SectionSummary
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface ExperienceSectionProps {
@@ -25,10 +25,11 @@ const Layout = styled.div`
   position: relative;
   z-index: 1;
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(19rem, 0.7fr) minmax(0, 1.3fr);
   gap: clamp(1rem, 1.4vw, 1.4rem);
-  align-items: start;
+  align-items: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
     grid-template-columns: minmax(17rem, 0.74fr) minmax(0, 1.26fr);
@@ -47,62 +48,93 @@ const Layout = styled.div`
 
 const StoryColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 1rem;
+  align-content: stretch;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    height: auto;
+  }
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(SectionOpening)`
   max-width: 10.4ch;
-  font-size: clamp(1.7rem, 2.7vw, 2.5rem);
 `;
 
 const StoryFlow = styled(StoryScroll)`
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    max-height: none;
-  }
+  width: 100%;
+  overflow: visible;
+  padding-right: 0;
+  max-height: none;
+  max-width: none;
 `;
 
 const ContentColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
-  grid-template-rows: auto auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 0.8rem;
-  align-content: start;
+  align-content: stretch;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    height: auto;
+  }
 `;
 
 const MediaStage = styled.div`
   min-height: 0;
+  height: 100%;
   display: grid;
-  grid-template-rows: auto auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 0.45rem;
   padding-bottom: 0.6rem;
   border-bottom: 1px solid ${({ theme }) => theme.colors.divider};
+  align-content: stretch;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    height: auto;
+  }
 `;
 
 const MediaViewport = styled.div`
-  width: min(100%, 46rem);
-  height: min(32vh, 19.5rem);
+  width: 100%;
+  min-height: 0;
+  height: 100%;
   display: grid;
-  align-items: center;
-  justify-items: center;
-  justify-self: center;
+  align-items: stretch;
+  justify-items: stretch;
+  justify-self: stretch;
+  align-self: stretch;
+  overflow: hidden;
+
+  & > figure {
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  & > figure > div {
+    max-height: 100%;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     width: 100%;
-    height: min(26vh, 15rem);
+    height: clamp(12rem, 28vh, 16rem);
   }
 
   @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
-    height: min(24vh, 13rem);
+    min-height: clamp(10rem, 24vh, 13rem);
   }
 `;
 
 const ConstructionCard = styled(DetailCard)`
-  width: min(100%, 36rem);
+  width: 100%;
   height: auto;
   min-height: auto;
-  justify-self: start;
+  justify-self: stretch;
   align-self: start;
   align-content: start;
   grid-auto-rows: max-content;
@@ -138,7 +170,9 @@ export function ExperienceSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <SectionSummary key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </SectionSummary>
           ))}
         </StoryFlow>
       </StoryColumn>
@@ -148,8 +182,10 @@ export function ExperienceSection({
           <MediaViewport>
             <ResponsiveMedia
               asset={media[mediaIndex] ?? activePage.media}
-              fit="contain"
-              frameSizing="fit-media"
+              fit="cover"
+              frameSizing="viewport-fill"
+              cornerStyle="card"
+              objectPosition="center center"
               priority={isActive}
               surfaceVariant="framed"
             />

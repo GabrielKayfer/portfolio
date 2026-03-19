@@ -1,5 +1,3 @@
-import { Eyebrow } from '../../components/ui/Eyebrow';
-import { ActionPillLink } from '../../components/ui/ActionPill';
 import type { ProjectDeckPage } from '../../features/spatial/projectPages';
 import type { ProjectContent } from '../../types/content';
 import { AuthenticationSection } from './sections/AuthenticationSection';
@@ -9,6 +7,8 @@ import { VisionSection } from './sections/VisionSection';
 import {
   SeedbankHeader,
   SeedbankHeaderCopy,
+  SeedbankHeaderEyebrow,
+  SeedbankHeaderLink,
   SeedbankLinkRow,
   SeedbankOrbLarge,
   SeedbankOrbSmall,
@@ -44,19 +44,21 @@ export function ProjectSeedbankPage({
         <SeedbankHeader>
           <SeedbankHeaderCopy>
             {isOverview ? <SeedbankProjectTag>{project.title}</SeedbankProjectTag> : null}
-            {isOverview ? <Eyebrow>{project.tagline}</Eyebrow> : null}
+            {isOverview ? (
+              <SeedbankHeaderEyebrow>{project.tagline}</SeedbankHeaderEyebrow>
+            ) : null}
           </SeedbankHeaderCopy>
 
           <SeedbankLinkRow>
             {project.links.map((link) => (
-              <ActionPillLink
+              <SeedbankHeaderLink
                 key={link.label}
                 href={link.href}
                 rel={link.external ? 'noreferrer' : undefined}
                 target={link.external ? '_blank' : undefined}
               >
                 {link.label}
-              </ActionPillLink>
+              </SeedbankHeaderLink>
             ))}
           </SeedbankLinkRow>
         </SeedbankHeader>

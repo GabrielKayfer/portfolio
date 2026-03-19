@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
   PanelChapterIndex as ChapterIndex,
@@ -9,7 +8,8 @@ import {
   PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening,
+  ProjectSectionSummary as SectionSummary
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface ProtectedAreaSectionProps {
@@ -21,6 +21,7 @@ const Layout = styled.div`
   --protected-scale-width: clamp(0.74, calc(100vw / 1920px), 1);
   --protected-scale-height: clamp(0.6, calc(100svh / 945px), 1);
   --protected-scale: min(var(--protected-scale-width), var(--protected-scale-height));
+  --protected-media-card-gap: 0.55rem;
 
   position: relative;
   z-index: 1;
@@ -64,63 +65,76 @@ const StoryColumn = styled.section`
   }
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(SectionOpening)`
   max-width: 12.4ch;
-  font-size: clamp(1.45rem, 2.2vw, 2.08rem);
-  line-height: 1;
 `;
 
 const StoryFlow = styled(StoryScroll)`
   max-width: clamp(16rem, calc(28rem * var(--protected-scale)), 28rem);
   height: 100%;
   gap: max(0.56rem, calc(0.7rem * var(--protected-scale)));
-  overflow: auto;
-  padding-right: 0.1rem;
+  overflow: visible;
+  padding-right: 0;
   max-height: none;
 `;
 
 const ImageColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
-  gap: 0.8rem;
-  align-content: start;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--protected-media-card-gap);
+  align-content: stretch;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    height: auto;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    gap: 0.65rem;
+    gap: var(--protected-media-card-gap);
+    height: auto;
   }
 `;
 
-const MediaViewport = styled.div`
+const MediaViewport = styled.div<{ $compact: boolean }>`
   width: 100%;
-  height: min(34vh, 21rem);
+  min-height: 0;
+  height: 100%;
   display: grid;
+  align-items: stretch;
+  justify-items: stretch;
   justify-self: stretch;
+  overflow: hidden;
+
+  & > figure {
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+  }
+
+  & > figure > div {
+    max-height: 100%;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-    height: min(30vh, 18rem);
+    height: ${({ $compact }) =>
+      $compact ? 'min(26vh, 15.5rem)' : 'min(30vh, 18rem)'};
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    height: min(26vh, 15rem);
+    height: ${({ $compact }) =>
+      $compact ? 'min(23vh, 13rem)' : 'min(26vh, 15rem)'};
   }
 `;
 
 const ProtectedCard = styled(DetailCard)`
+  width: 100%;
+  justify-self: stretch;
   min-height: auto;
   gap: max(0.18rem, calc(0.22rem * var(--protected-scale)));
   padding:
     max(0.54rem, calc(0.62rem * var(--protected-scale)))
     max(0.6rem, calc(0.7rem * var(--protected-scale)));
-
-  ${DetailLabel} {
-    font-size: max(0.56rem, calc(0.64rem * var(--protected-scale)));
-    letter-spacing: 0.1em;
-  }
-
-  ${DetailBody} {
-    font-size: max(0.74rem, calc(0.8rem * var(--protected-scale)));
-    line-height: 1.46;
-  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
     padding: 0.6rem 0.66rem;
@@ -144,18 +158,22 @@ export function ProtectedAreaSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <SectionSummary key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </SectionSummary>
           ))}
         </StoryFlow>
       </StoryColumn>
 
       {media.map((asset, index) => (
         <ImageColumn key={`${activePage.id}-${asset.src}-${index}`}>
-          <MediaViewport>
+          <MediaViewport $compact={index === 1}>
             <ResponsiveMedia
               asset={asset}
-              fit="contain"
-              frameSizing="fit-media"
+              fit="cover"
+              frameSizing="viewport-fill"
+              cornerStyle="card"
+              objectPosition="top center"
               priority={index === 0 ? isActive : false}
               surfaceVariant="framed"
             />

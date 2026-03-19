@@ -6,7 +6,7 @@ import {
   PanelDetailBody as DetailBody,
   PanelDetailCard as DetailCard,
   PanelStoryHeader as StoryHeader,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface VisionSectionProps {
@@ -15,13 +15,16 @@ interface VisionSectionProps {
 }
 
 const Layout = styled.div`
+  --vision-media-card-gap: 0.55rem;
+
   position: relative;
   z-index: 1;
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(19rem, 0.84fr) minmax(17rem, 1fr) minmax(17rem, 1fr);
   gap: 1rem;
-  align-items: start;
+  align-items: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
     grid-template-columns:
@@ -43,39 +46,36 @@ const Layout = styled.div`
 
 const TextColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
   align-content: start;
   padding-top: 0.15rem;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     grid-column: 1 / -1;
+    height: auto;
   }
 `;
 
 const VisionHeader = styled(StoryHeader)`
-  gap: 0;
+  gap: 0.45rem;
   max-width: 21rem;
-  margin-top: -0.3rem;
-
-  @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    margin-top: 0;
-  }
 `;
 
-const VisionTitle = styled(StoryTitleBase)`
+const VisionTitle = styled(SectionOpening)`
   max-width: 11.2ch;
-  font-size: clamp(1.45rem, 2.15vw, 2.2rem);
-  line-height: 1.02;
 `;
 
 const MediaSection = styled.section`
   grid-column: 2 / 4;
   min-height: 0;
+  height: 100%;
   display: grid;
-  align-content: start;
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     grid-column: 1 / -1;
+    height: auto;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
@@ -84,25 +84,42 @@ const MediaSection = styled.section`
 `;
 
 const MediaGrid = styled.div`
+  min-height: 0;
+  height: 100%;
   width: 100%;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.8rem;
-  align-items: start;
+  align-items: stretch;
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     grid-template-columns: 1fr;
+    height: auto;
   }
 `;
 
 const MediaColumn = styled.div`
+  min-height: 0;
+  height: 100%;
   display: grid;
-  gap: 0.7rem;
-  align-content: start;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: var(--vision-media-card-gap);
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    gap: 0.6rem;
+    gap: var(--vision-media-card-gap);
   }
+`;
+
+const MediaViewport = styled.div`
+  min-height: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  align-items: center;
+  justify-items: stretch;
+  overflow: hidden;
 `;
 
 const VisionCard = styled(DetailCard)`
@@ -135,13 +152,17 @@ export function VisionSection({
         <MediaGrid>
           {media.map((asset, index) => (
             <MediaColumn key={`${activePage.id}-${asset.src}-${index}`}>
-              <ResponsiveMedia
-                asset={asset}
-                fit="contain"
-                frameSizing="fill"
-                priority={index === 0 ? isActive : false}
-                surfaceVariant="framed"
-              />
+              <MediaViewport>
+                <ResponsiveMedia
+                  asset={asset}
+                  fit="cover"
+                  frameSizing="viewport-fill"
+                  cornerStyle="card"
+                  objectPosition="top center"
+                  priority={index === 0 ? isActive : false}
+                  surfaceVariant="framed"
+                />
+              </MediaViewport>
 
               {index === 0 && leadText ? (
                 <VisionCard $compact={false}>

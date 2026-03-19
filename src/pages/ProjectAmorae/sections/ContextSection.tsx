@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 import { ResponsiveMedia } from '../../../components/media/ResponsiveMedia';
-import { BodyText } from '../../../components/ui/BodyText';
 import type { ProjectDeckPage } from '../../../features/spatial/projectPages';
 import {
   PanelChapterIndex as ChapterIndex,
@@ -9,7 +8,8 @@ import {
   PanelDetailLabel as DetailLabel,
   PanelStoryHeader as StoryHeader,
   PanelStoryScroll as StoryScroll,
-  PanelStoryTitleBase as StoryTitleBase
+  ProjectSectionOpening as SectionOpening,
+  ProjectSectionSummary as SectionSummary
 } from '../../../components/ui/ProjectPagePrimitives';
 
 interface ContextSectionProps {
@@ -21,10 +21,11 @@ const Layout = styled.div`
   position: relative;
   z-index: 1;
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-columns: minmax(19rem, 0.7fr) minmax(0, 1.3fr);
   gap: clamp(1rem, 1.4vw, 1.4rem);
-  align-items: start;
+  align-items: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.xl}) {
     grid-template-columns: minmax(17rem, 0.74fr) minmax(0, 1.26fr);
@@ -43,67 +44,77 @@ const Layout = styled.div`
 
 const StoryColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   gap: 1rem;
+  align-content: stretch;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    height: auto;
+  }
 `;
 
-const StoryTitle = styled(StoryTitleBase)`
+const StoryTitle = styled(SectionOpening)`
   max-width: 10.4ch;
-  font-size: clamp(1.7rem, 2.7vw, 2.5rem);
 `;
 
 const StoryFlow = styled(StoryScroll)`
-  @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
-    max-height: none;
-  }
+  width: 100%;
+  overflow: visible;
+  padding-right: 0;
+  max-height: none;
+  max-width: none;
 `;
 
 const ContentColumn = styled.section`
   min-height: 0;
   display: grid;
+  width: 100%;
+  justify-self: stretch;
   grid-template-rows: auto auto;
   gap: 1rem;
   align-content: start;
+
+  @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
+    width: 100%;
+    height: auto;
+  }
 `;
 
 const MediaViewport = styled.div`
-  width: min(100%, 50rem);
-  height: min(35vh, 22rem);
+  width: 100%;
+  min-height: 0;
   display: grid;
-  align-items: center;
-  justify-items: center;
-  justify-self: center;
+  align-items: start;
+  justify-items: stretch;
+  justify-self: stretch;
+  align-self: start;
+  overflow: hidden;
+
+  & > figure {
+    width: 100%;
+    height: auto;
+  }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
     width: 100%;
-    height: min(28vh, 16rem);
-  }
-
-  @media (max-height: ${({ theme }) => theme.viewport.heights.compact}) {
-    height: min(26vh, 14rem);
   }
 `;
 
 const HorizontalCards = styled.div`
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: minmax(14rem, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.6rem;
-  overflow-x: auto;
-  padding-bottom: 0.15rem;
-  scrollbar-width: none;
-
-  &::-webkit-scrollbar {
-    display: none;
-  }
+  width: 100%;
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
-    grid-auto-columns: minmax(18rem, 60vw);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.sm}) {
-    grid-auto-columns: minmax(14.5rem, 80vw);
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -139,7 +150,9 @@ export function ContextSection({
 
         <StoryFlow data-spatial-scroll-lock>
           {activePage.body.map((paragraph, index) => (
-            <BodyText key={`${activePage.id}-paragraph-${index}`}>{paragraph}</BodyText>
+            <SectionSummary key={`${activePage.id}-paragraph-${index}`}>
+              {paragraph}
+            </SectionSummary>
           ))}
         </StoryFlow>
       </StoryColumn>
@@ -148,15 +161,16 @@ export function ContextSection({
         <MediaViewport>
           <ResponsiveMedia
             asset={activePage.media}
-            fit="contain"
-            frameSizing="fit-media"
+            fit="cover"
+            frameSizing="fill"
+            cornerStyle="card"
             priority={isActive}
             surfaceVariant="framed"
           />
         </MediaViewport>
 
         {activePage.details.length ? (
-          <HorizontalCards data-spatial-scroll-lock>
+          <HorizontalCards>
             {activePage.details.map((item) => (
               <ContextCard key={`${activePage.id}-${item.label}`} $compact={false}>
                 <DetailLabel>{item.label}</DetailLabel>

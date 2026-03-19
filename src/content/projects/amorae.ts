@@ -38,7 +38,7 @@ export const amoraeProject: ProjectContent = {
         src: '/media/amorae/produtosAmorae.png',
         alt: 'Vitrine de produtos do projeto Amoraê',
         aspectRatio: '1824 / 833'
-      },
+      }
     },
     {
       id: 'experiencia',
