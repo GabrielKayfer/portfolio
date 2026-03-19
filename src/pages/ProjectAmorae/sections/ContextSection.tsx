@@ -69,12 +69,13 @@ const StoryFlow = styled(StoryScroll)`
 
 const ContentColumn = styled.section`
   min-height: 0;
+  height: 100%;
   display: grid;
   width: 100%;
   justify-self: stretch;
-  grid-template-rows: auto auto;
+  grid-template-rows: minmax(0, 1fr) auto;
   gap: 1rem;
-  align-content: start;
+  align-content: stretch;
 
   @media (max-width: ${({ theme }) => theme.breakpoints.lg}) {
     width: 100%;
@@ -85,8 +86,9 @@ const ContentColumn = styled.section`
 const MediaViewport = styled.div`
   width: 100%;
   min-height: 0;
+  height: 100%;
   display: grid;
-  align-items: start;
+  align-items: stretch;
   justify-items: stretch;
   justify-self: stretch;
   align-self: start;
@@ -94,7 +96,12 @@ const MediaViewport = styled.div`
 
   & > figure {
     width: 100%;
-    height: auto;
+    height: 100%;
+    min-height: 0;
+  }
+
+  & > figure > div {
+    max-height: 100%;
   }
 
   @media (max-width: ${({ theme }) => theme.breakpoints.md}) {
@@ -162,8 +169,9 @@ export function ContextSection({
           <ResponsiveMedia
             asset={activePage.media}
             fit="cover"
-            frameSizing="fill"
+            frameSizing="viewport-fill"
             cornerStyle="card"
+            objectPosition="center center"
             priority={isActive}
             surfaceVariant="framed"
           />
